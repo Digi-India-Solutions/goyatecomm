@@ -1,6 +1,6 @@
 import axios from "axios";
-// export const serverUrl="https://api.goyattrading.shop"
-export const serverUrl="http://localhost:9000"
+export const serverUrl="https://api.goyattrading.shop"
+// export const serverUrl="http://localhost:9000"
 
 const axiosInstance = axios.create({
   baseURL: `${serverUrl}/api/v1`,
