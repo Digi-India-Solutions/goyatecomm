@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import QR from "../../Images/DBS/QR.png";
-import book1 from "../../Images/DBS/1.jpg";
+// import QR from "../../Images/DBS/QR.png";
+// import book1 from "../../Images/DBS/1.jpg";
 import {
   BookOpenText,
   CheckCheck,

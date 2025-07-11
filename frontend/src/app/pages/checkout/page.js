@@ -2,8 +2,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import book1 from "../../Images/DBS/1.jpg";
-import book2 from "../../Images/DBS/1.jpg";
+// import book1 from "../../Images/DBS/1.jpg";
+// import book2 from "../../Images/DBS/1.jpg";
 import { Loader2, Lock, ShoppingBag, Truck } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllCartItemsAPI } from "@/app/redux/AddtoCart/apiCartSlice";

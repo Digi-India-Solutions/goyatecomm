@@ -1,7 +1,7 @@
 "use client";
 import { serverUrl } from "@/app/redux/features/axiosInstance";
 import { fetchSubCategories } from "@/app/redux/features/getAllCategory/categorySlice";
-import Image from "next/image";
+// import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
