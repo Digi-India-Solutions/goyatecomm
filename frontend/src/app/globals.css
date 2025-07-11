@@ -1,0 +1,129 @@
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import "tailwindcss";
+
+:root {
+  --purple: #4cb051;
+  --light-purple: #eee2f8;
+  --black: #000;
+  --red: red;
+  --gray: #f3f4f6;
+}
+
+.green{
+  color: #4cb051;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  display: none !important;
+}
+
+.slick-list {
+  height: 80dvh !important;
+}
+
+.slick-dots li {
+  height: 100px !important;
+  width: 100px !important;
+}
+.slick-dots li a img {
+  height: 100px !important;
+  width: 100px !important;
+  object-fit: cover !important;
+}
+
+.purple-btn {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--purple);
+  color: #fff;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease-in-out;
+  font-weight: 600;
+}
+
+.black-btn {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--black);
+  color: #fff;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease-in-out;
+  font-weight: 600;
+}
+
+.view-all-btn {
+  display: flex;
+  align-items: center;
+  border: var(--purple) solid 1px;
+  color: var(--purple);
+  border-radius: 1rem;
+  padding: 0.25rem 1.5rem;
+  font-size: 16px;
+  transition: all 0.3s ease-in-out;
+}
+
+.view-all-btn:hover {
+  background-color: var(--light-purple);
+}
+
+.add-to-cart-btn,
+.added-to-cart-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.75rem;
+  width: 100%;
+  border: var(--purple) solid 1px;
+  padding: 0.25rem 0.75rem;
+  font-size: 14px;
+  color: var(--purple);
+  transition: all 0.3s ease;
+  border-radius: 1rem;
+}
+
+.added-to-cart-btn {
+  color: white;
+  background: var(--purple);
+}
+
+.add-to-cart-btn:hover {
+  background-color: var(--light-purple);
+  color: var(--purple);
+  font-weight: 600;
+}
+
+.out-of-stock-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.75rem;
+  width: 100%;
+  border: #da1f1f solid 1px;
+  padding: 0.25rem 0.75rem;
+  font-size: 14px;
+  color: #da1f1f;
+  background-color: #ffffff;
+  border-radius: 1rem;
+  cursor: not-allowed;
+  pointer-events: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+@media screen and (max-width: 768px) {
+  .view-all-btn {
+    font-size: 12px;
+    padding: 0.25rem 1rem;
+  }
+}

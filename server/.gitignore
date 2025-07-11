@@ -1,0 +1,21 @@
+# Node modules
+node_modules/
+public/
+# Logs
+logs/
+*.log
+
+# dotenv environment variables
+.env
+.env.*          
+
+# Build output
+dist/
+build/
+
+# Optional npm cache directory
+.npm
+
+
+# Others
+*.local
