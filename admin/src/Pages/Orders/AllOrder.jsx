@@ -18,7 +18,7 @@ const AllOrder = () => {
   // Fetch orders
   const fetchOrders = async () => {
     try {
-      const response = await axiosInstance.get("/api/v1/order/get-all-orders");
+      const response = await axiosInstance.get("/api/v1/order/get-all-orders-admin");
       if (response.status === 200) {
         setOrders(response?.data.orders?.reverse());
         setFilteredOrders(response?.data.orders);

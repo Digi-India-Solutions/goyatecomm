@@ -6,7 +6,12 @@ const orderSchema = new mongoose.Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      // required: true,
+    },
+    userDetails: {
+      name: String,
+      upiId: String,
+      date: String,
     },
     orderUniqueId: {
       type: String,
@@ -73,39 +78,39 @@ const orderSchema = new mongoose.Schema(
     shippingAddress: {
       firstName: {
         type: String,
-        required: true,
+        // required: true,
       },
       lastName: {
         type: String,
-        required: true,
+        // required: true,
       },
       email: {
         type: String,
-        required: true,
+        // required: true,
       },
       address: {
         type: String,
-        required: true,
+        // required: true,
       },
       city: {
         type: String,
-        required: true,
+        // required: true,
       },
       state: {
         type: String,
-        required: true,
+        // required: true,
       },
       zipCode: {
         type: String,
-        required: true,
+        // required: true,
       },
       country: {
         type: String,
-        required: true,
+        // required: true,
       },
       phone: {
         type: String,
-        required: true,
+        // required: true,
       },
     },
   },

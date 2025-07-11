@@ -82,12 +82,6 @@ app.get("/", (req, res) => {
   res.send("Server is running");
 });
 
-app.get("/developer", (req, res) => {
-  res.send(
-    `<h1>It is great to see you on the server of <a href="https://www.linkedin.com/in/nitin-gupta-b7a9a02a1/">Nitin Gupta</a></h1>`
-  );
-});
-
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
