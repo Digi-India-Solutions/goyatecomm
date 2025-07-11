@@ -4,8 +4,6 @@ import Link from "next/link";
 import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import picture from "../../Images/DowloadImage/kurkure.avif";
-import banner from "../../Images/DBS/banner.JPG";
-import Image from "next/image";
 import ShopBanner from "../Shop/ShopBanner";
 import { serverUrl } from "@/app/redux/features/axiosInstance";
 
