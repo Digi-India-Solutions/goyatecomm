@@ -16,7 +16,7 @@ const AllCategory = () => {
   // Helper function to generate light pastel color
   const getRandomLightColor = () => {
     const hue = Math.floor(Math.random() * 360); // hue between 0-360
-    const pastel = hsl(${hue}, 100%, 90%); // pastel background using HSL
+    const pastel = `hsl(${hue}, 100%, 90%)`; // pastel background using HSL
     return pastel;
   };
 
@@ -77,7 +77,7 @@ const AllCategory = () => {
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
           {categories.map((category) => (
             <Link
-              href={/pages/categories/${category._id}}
+              href={`/pages/categories/${category._id}`}
               key={category._id}
               className="flex justify-center items-center p-0 m-0"
             >
@@ -86,7 +86,7 @@ const AllCategory = () => {
                   className="w-[100px] h-[100px] object-cover"
                   src={
                     category?.mainCategoryImage
-                      ? ${serverUrl}/public/image/${category.mainCategoryImage}
+                      ? `${serverUrl}/public/image/${category.mainCategoryImage}`
                       : picture
                   }
                   alt={category?.Parent_name || "Category"}

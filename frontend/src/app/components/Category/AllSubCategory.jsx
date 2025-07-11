@@ -68,7 +68,7 @@ export default function AllSubCategory() {
           {subCategories.map((category) => (
             <Link
               key={category._id}
-              href={/pages/shop/productBysubcategory/${category._id}}
+              href={`/pages/shop/productBysubcategory/${category._id}`}
               passHref
               className="group block green rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden"
             >
@@ -77,7 +77,7 @@ export default function AllSubCategory() {
                 <Image
                   src={
                     category.categoryImage
-                      ? ${serverUrl}/public/image/${category.categoryImage}
+                      ? `${serverUrl}/public/image/${category.categoryImage}`
                       : CallBackImg
                   }
                   alt={category.SubCategoryName}
@@ -104,7 +104,7 @@ export default function AllSubCategory() {
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
           {subCategories.map((category) => (
             <Link
-              href={/pages/shop/productBysubcategory/${category._id}}
+              href={`/pages/shop/productBysubcategory/${category._id}`}
               key={category._id}
               className="flex justify-center items-center p-0 m-0"
             >
@@ -113,7 +113,7 @@ export default function AllSubCategory() {
                   className="w-[100px] h-[100px] object-cover"
                   src={
                     category.categoryImage
-                      ? ${serverUrl}/public/image/${category.categoryImage}
+                      ? `${serverUrl}/public/image/${category.categoryImage}`
                       : CallBackImg
                   }
                   alt={category.SubCategoryName}

@@ -458,9 +458,9 @@ export default function Page() {
                       <Image
                         src={
                           item?.image
-                            ? ${serverUrl}/public/image/${item.image}
+                            ? `${serverUrl}/public/image/${item.image}`
                             : item?.productId?.images?.[0]
-                            ? ${serverUrl}/public/image/${item.productId.images[0]}
+                            ? `${serverUrl}/public/image/${item.productId.images[0]}`
                             : CallBackImg
                         }
                         alt={item?.name || item?.productId?.title || "product"}
@@ -504,7 +504,7 @@ export default function Page() {
                   <div className="flex justify-between text-red-600 ">
                     <span>Coupon Discount</span>
                     <span>
-                      -{${couponDiscount > 100 ? "₹" : ""}}
+                      -{`${couponDiscount > 100 ? "₹" : ""}`}
                       {couponDiscount}
                       {couponDiscount < 100 ? "%" : ""}
                     </span>
