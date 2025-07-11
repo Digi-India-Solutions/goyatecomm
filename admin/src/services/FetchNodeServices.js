@@ -1,6 +1,6 @@
 import axios from "axios";
-// const serverURL = "http://localhost:9000";
-const serverURL = "https://api.goyattrading.shop";
+const serverURL = "http://localhost:9000";
+// const serverURL = "https://api.goyattrading.shop";
 
 const postData = async (url, body) => {
   try {

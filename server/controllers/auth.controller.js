@@ -387,6 +387,24 @@ const updateProfile = async (req, res) => {
     return res.status(500).json({ message: "update profile server error" });
   }
 };
+
+const createMultipleUsers = async (req, res) => {
+  try {
+    const { users } = req.body || {};
+    if (!users || !Array.isArray(users) || users.length === 0) {
+      return res.status(400).json({ message: "Users data is required" });
+    }
+   const createdUsers = await User.insertMany(users)
+   return res.status(201).json({
+      message: "Multiple users created successfully",
+      users: createdUsers,
+    });
+  } catch (error) {
+    console.log("create multiple users error", error);
+    return res.status(500).json({ message: "create multiple users server error" });
+    
+  }
+}
 export {
   signUp,
   login,
@@ -399,4 +417,5 @@ export {
   updateProfile,
   GetAllUsers,
   verifyAdminLoggedIn,
+  createMultipleUsers
 };

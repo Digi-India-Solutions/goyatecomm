@@ -25,7 +25,7 @@ const router = express.Router();
 
 router.post(
   "/create-product",
-  verifyAdmin,
+  // verifyAdmin,
   upload.array("images", 5),
   multerErrorHandler,
   createProduct
