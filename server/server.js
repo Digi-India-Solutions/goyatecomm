@@ -29,9 +29,9 @@ const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:3001",
   "http://192.168.166.80:3001",
-  "https://iscindiasales.co.in",
-  "https://admin.iscindiasales.co.in",
-  "https://www.iscindiasales.co.in",
+  "https://goyattrading.shop",
+  "https://admin.goyattrading.shop",
+  "https://www.goyattrading.shop",
 ];
 
 app.use(
