@@ -4,6 +4,8 @@ import Link from "next/link";
 import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import picture from "../../Images/DowloadImage/kurkure.avif";
+import banner from "../../Images/DBS/banner.JPG";
+import Image from "next/image";
 import ShopBanner from "../Shop/ShopBanner";
 import { serverUrl } from "@/app/redux/features/axiosInstance";
 
@@ -14,7 +16,7 @@ const AllCategory = () => {
   // Helper function to generate light pastel color
   const getRandomLightColor = () => {
     const hue = Math.floor(Math.random() * 360); // hue between 0-360
-    const pastel = `hsl(${hue}, 100%, 90%)`; // pastel background using HSL
+    const pastel = hsl(${hue}, 100%, 90%); // pastel background using HSL
     return pastel;
   };
 
@@ -72,56 +74,32 @@ const AllCategory = () => {
         <h2 className="text-4xl font-bold mb-4 text-center green">
           All Categories
         </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {categories.map((category) => (
-              <Link href={`/pages/categories/${category._id}`} key={category._id}>
-                {/* Image Container */}
-                <div className="relative w-full h-40 sm:h-56 lg:h-55">
-                  <div
-                    className="border-purple-400 justify-center flex rounded-lg hover:shadow-lg transition"
-                    style={{
-                      // backgroundColor: categoryColors[cat._id],
-                      backgroundColor: "rgb(236 244 254 / 50%)",
-                      color: "#333",
-                    }}
-                  >
-                    <img
-                      className="w-[150px] h-[140px] object-contain"
-                      src={
-                        category?.mainCategoryImage
-                          ? `${serverUrl}/public/image/${category.mainCategoryImage}`
-                          : picture
-                      }
-                      alt={category?.Parent_name || "Category"}
-                      width={150}
-                      height={140}
-                    />
-                  </div>
-                  <p className="mt-3 text-center font-semibold text-[12px] text-gray-500 md:text-md break-words">
-                    {category?.Parent_name}
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        {/* <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-8 gap-4">
-          {categories.map((cat) => (
-            <Link href={`/pages/categories/${cat._id}`} key={cat._id}>
-            
-              <div
-                className="shadow-md border border-purple-400 p-4 rounded-lg hover:shadow-lg transition"
-                style={{
-                  backgroundColor: categoryColors[cat._id],
-                  color: "#333",
-                }}
-              >
-                <p className="text-center font-semibold text-sm md:text-lg break-words">
-                  {cat.Parent_name}
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
+          {categories.map((category) => (
+            <Link
+              href={/pages/categories/${category._id}}
+              key={category._id}
+              className="flex justify-center items-center p-0 m-0"
+            >
+              <div className="w-[150px] h-[150px] bg-[rgb(236,244,254,0.5)] rounded-lg border border-purple-200 hover:shadow-md transition duration-300 flex flex-col items-center justify-center overflow-hidden">
+                <img
+                  className="w-[100px] h-[100px] object-cover"
+                  src={
+                    category?.mainCategoryImage
+                      ? ${serverUrl}/public/image/${category.mainCategoryImage}
+                      : picture
+                  }
+                  alt={category?.Parent_name || "Category"}
+                  width={100}
+                  height={100}
+                />
+                <p className="mt-1 text-center font-medium text-xs text-gray-700 break-words">
+                  {category?.Parent_name}
                 </p>
               </div>
             </Link>
           ))}
-        </div> */}
+        </div>
       </div>
     </>
   );

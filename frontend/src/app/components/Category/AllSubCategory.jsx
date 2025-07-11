@@ -55,28 +55,29 @@ export default function AllSubCategory() {
         {/* Header */}
         <div className="text-center mb-8">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Shop by {subCategories[0]?.Parent_name?.Parent_name}
+            Shop by {subCategories[0]?.Parent_name?.Parent_name || "Sub Category"}
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-           Discover our wide range of groceries across different subcategories — from fresh produce to daily essentials!
+            Discover our wide range of groceries across different subcategories
+            — from fresh produce to daily essentials!
           </p>
         </div>
 
         {/* Categories Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+        {/* <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
           {subCategories.map((category) => (
             <Link
               key={category._id}
-              href={`/pages/shop/productBysubcategory/${category._id}`}
+              href={/pages/shop/productBysubcategory/${category._id}}
               passHref
               className="group block green rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden"
             >
-              {/* Image Container */}
+       
               <div className="relative w-full h-40 sm:h-56 lg:h-55">
                 <Image
                   src={
                     category.categoryImage
-                      ? `${serverUrl}/public/image/${category.categoryImage}`
+                      ? ${serverUrl}/public/image/${category.categoryImage}
                       : CallBackImg
                   }
                   alt={category.SubCategoryName}
@@ -85,11 +86,43 @@ export default function AllSubCategory() {
                 />
               </div>
 
-              {/* Category Name */}
               <div className="p-4 bg-green-500 bg-opacity-80 rounded-b-lg">
                 <h3 className="text-sm md:text-md font-semibold text-white text-center">
                   {category.SubCategoryName}
                 </h3>
+              </div>
+            </Link>
+          ))}
+        </div> */}
+{
+  subCategories.length === 0 && (
+    <div className="text-center py-6 text-gray-500">
+      No subcategories available for this category.
+    </div>
+  )
+}
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
+          {subCategories.map((category) => (
+            <Link
+              href={/pages/shop/productBysubcategory/${category._id}}
+              key={category._id}
+              className="flex justify-center items-center p-0 m-0"
+            >
+              <div className="w-[150px] h-[150px] bg-[rgb(236,244,254,0.5)] rounded-lg border border-purple-200 hover:shadow-md transition duration-300 flex flex-col items-center justify-center overflow-hidden">
+                <img
+                  className="w-[100px] h-[100px] object-cover"
+                  src={
+                    category.categoryImage
+                      ? ${serverUrl}/public/image/${category.categoryImage}
+                      : CallBackImg
+                  }
+                  alt={category.SubCategoryName}
+                  width={100}
+                  height={100}
+                />
+                <p className="mt-1 text-center font-medium text-xs text-gray-700 break-words">
+                  {category.SubCategoryName}
+                </p>
               </div>
             </Link>
           ))}

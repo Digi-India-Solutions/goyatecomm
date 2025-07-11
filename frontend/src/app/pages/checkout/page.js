@@ -100,7 +100,7 @@ export default function Page() {
     if (!formData.city.trim()) newErrors.city = "City is required";
     if (!formData.state.trim()) newErrors.state = "State is required";
     if (!formData.zipCode.trim()) newErrors.zipCode = "ZIP code is required";
-    if(!formData.UTRId.trim()) newErrors.UTRId = "UTR ID is required";
+    // if(!formData.UTRId.trim()) newErrors.UTRId = "UTR ID is required";
     if (!formData.paymentMethod)
       newErrors.paymentMethod = "Payment method is required";
     setErrors(newErrors);
@@ -109,14 +109,21 @@ export default function Page() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Form data before submission:", formData);
 
     if (!validateForm()) return;
+    
     setShowScanner(true);
   };
 
   const handleCreateOrder = async () => {
+      if(!formData.UTRId){
+        toast.error("Please enter your UTR ID.");
+        return;
+      }
     const loader = toast.loading("Processing your order...");
     try {
+    
       await dispatch(createOrder(formData)).unwrap();
       toast.dismiss(loader);
       toast.success("Order placed successfully!");
@@ -451,9 +458,9 @@ export default function Page() {
                       <Image
                         src={
                           item?.image
-                            ? `${serverUrl}/public/image/${item.image}`
+                            ? ${serverUrl}/public/image/${item.image}
                             : item?.productId?.images?.[0]
-                            ? `${serverUrl}/public/image/${item.productId.images[0]}`
+                            ? ${serverUrl}/public/image/${item.productId.images[0]}
                             : CallBackImg
                         }
                         alt={item?.name || item?.productId?.title || "product"}
@@ -497,7 +504,7 @@ export default function Page() {
                   <div className="flex justify-between text-red-600 ">
                     <span>Coupon Discount</span>
                     <span>
-                      -{`${couponDiscount > 100 ? "₹" : ""}`}
+                      -{${couponDiscount > 100 ? "₹" : ""}}
                       {couponDiscount}
                       {couponDiscount < 100 ? "%" : ""}
                     </span>

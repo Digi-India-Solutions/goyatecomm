@@ -83,7 +83,7 @@ export default function ProductDetails() {
         toast.success(
           exists
             ? "Quantity updated in your cart!"
-            : `Great choice! ${product.title} added.`
+            : Great choice! ${product.title} added.
         );
       } catch (error) {
         toast.error("Something went wrong. Please try again.");
@@ -95,7 +95,7 @@ export default function ProductDetails() {
       toast.success(
         insideApiExists
           ? "Quantity updated in your cart!"
-          : `Great choice! ${product.title} added.`
+          : Great choice! ${product.title} added.
       );
     }
   };
@@ -112,7 +112,7 @@ export default function ProductDetails() {
       } else {
         dispatch(addToWishlistState({ _id }));
         dispatch(addToWishlistApi({ productId: _id }));
-        toast.success(`"${title}" added to wishlist.`);
+        toast.success("${title}" added to wishlist.);
       }
     } else {
       const isAlreadyInWishlist = wishlistItems?.some(
@@ -131,7 +131,7 @@ export default function ProductDetails() {
             oldPrice: price,
           })
         );
-        toast.success(`"${title}" added to wishlist.`);
+        toast.success("${title}" added to wishlist.);
       }
     }
   };
@@ -147,7 +147,7 @@ export default function ProductDetails() {
       navigator
         .share({
           title: "Check out this product!",
-          text: `I found this amazing book on GOYAT TRADING`,
+          text: I found this amazing book on GOYAT TRADING,
           url: window.location.href,
         })
         .then(() => toast.success("Shared successfully"))
@@ -172,7 +172,7 @@ export default function ProductDetails() {
 
     const fetchProductDetail = async () => {
       try {
-        const response = await axiosInstance.get(`/product/get-product/${id}`);
+        const response = await axiosInstance.get(/product/get-product/${id});
         setBook(response.data.product);
         console.log("Product data:=>", response?.data?.product?.images);
       } catch (err) {
@@ -200,7 +200,7 @@ export default function ProductDetails() {
       </div>
     );
   }
-  // console.log("Product data:=>", `${serverUrl}/public/image/${book?.images[0]}`);
+  // console.log("Product data:=>", ${serverUrl}/public/image/${book?.images[0]});
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Back Button */}
@@ -225,7 +225,7 @@ export default function ProductDetails() {
               // src={book1}
               src={
                 book?.images?.[0]
-                  ? `${serverUrl}/public/image/${book?.images[0]}`
+                  ? ${serverUrl}/public/image/${book?.images[0]}
                   : CallBackImg
               }
               className="h-[415px] object-cover hover:scale-97 rounded-lg transition-transform duration-300"
@@ -250,7 +250,7 @@ export default function ProductDetails() {
               >
                 <Image
                   src={image || "/placeholder.svg"}
-                  alt={`${book.title} preview ${index + 1}`}
+                  alt={${book.title} preview ${index + 1}}
                   width={100}
                   height={150}
                   className="object-cover aspect-[2/3]"
@@ -286,7 +286,7 @@ export default function ProductDetails() {
                       ? wishlistItems?.some((item) => item?._id === book._id)
                       : wishlistItems?.some((item) => item.id === book._id)
                   ) ? (
-                    "❤️"
+                    "❤"
                   ) : (
                     <Heart size={20} />
                   )}
@@ -340,7 +340,7 @@ export default function ProductDetails() {
             {/* {book?.category && book?.category?.SubCategoryName && (
               <div className="flex flex-wrap gap-2 mt-3">
                 <Link
-                  href={`/pages/shop/productBysubcategory/${book?.category?._id}`}
+                  href={/pages/shop/productBysubcategory/${book?.category?._id}}
                 >
                   <span className="px-2.5 py-0.5 bg-green-100 text-green-800 text-xs font-medium rounded-full">
                     {book?.category?.SubCategoryName}
@@ -429,7 +429,7 @@ export default function ProductDetails() {
                 {book.stock > 10
                   ? "In Stock"
                   : book.stock > 0
-                  ? `Only ${book.stock} left`
+                  ? Only ${book.stock} left
                   : "Out of Stock"}
               </span>
             </div> */}
@@ -524,7 +524,7 @@ export default function ProductDetails() {
               {activeTab === "details" && (
                 <div className="space-y-3">
                   <div className="grid grid-cols-2 gap-2 text-sm">
-                    <div className="font-medium mb-2">Key Features:</div>
+                    {/* <div className="font-medium mb-2">Key Features:</div>
                     <div>{book?.author || "N/A"}</div>
 
                     <div className="font-medium">Unit:</div>
@@ -539,7 +539,14 @@ export default function ProductDetails() {
                     <div>{book?.publisher || "N/A"}</div>
 
                     <div className="font-medium">Manufacturer:</div>
-                    <div>{book?.publicationDate || "N/A"}</div>
+                    <div>{book?.publicationDate || "N/A"}</div> */}
+                    <div>
+                      {book?.details && (
+                         <p className="text-sm leading-relaxed">
+                    {htmlParser.parse(book.details)}
+                  </p>
+                      )}
+                    </div>
                   </div>
                 </div>
               )}
