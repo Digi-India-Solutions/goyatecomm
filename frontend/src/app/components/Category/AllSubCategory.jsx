@@ -55,7 +55,8 @@ export default function AllSubCategory() {
         {/* Header */}
         <div className="text-center mb-8">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Shop by {subCategories[0]?.Parent_name?.Parent_name || "Sub Category"}
+            Shop by{" "}
+            {subCategories[0]?.Parent_name?.Parent_name || "Sub Category"}
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Discover our wide range of groceries across different subcategories
@@ -94,13 +95,11 @@ export default function AllSubCategory() {
             </Link>
           ))}
         </div> */}
-{
-  subCategories.length === 0 && (
-    <div className="text-center py-6 text-gray-500">
-      No subcategories available for this category.
-    </div>
-  )
-}
+        {subCategories.length === 0 && (
+          <div className="text-center py-6 text-gray-500">
+            No subcategories available for this category.
+          </div>
+        )}
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
           {subCategories.map((category) => (
             <Link
@@ -108,7 +107,7 @@ export default function AllSubCategory() {
               key={category._id}
               className="flex justify-center items-center p-0 m-0"
             >
-              <div className="w-[150px] h-[150px] bg-[rgb(236,244,254,0.5)] rounded-lg border border-purple-200 hover:shadow-md transition duration-300 flex flex-col items-center justify-center overflow-hidden">
+              <div className="w-[150px] h-[150px] bg-[rgb(236,244,254,0.5)] rounded-lg border border-purple-200 hover:shadow-md transition duration-300 flex flex-col items-center justify-center overflow-hidden md:gap-2.5 gap-2">
                 <img
                   className="w-[100px] h-[100px] object-cover"
                   src={

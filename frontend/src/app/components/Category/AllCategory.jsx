@@ -81,7 +81,7 @@ const AllCategory = () => {
               key={category._id}
               className="flex justify-center items-center p-0 m-0"
             >
-              <div className="w-[150px] h-[150px] bg-[rgb(236,244,254,0.5)] rounded-lg border border-purple-200 hover:shadow-md transition duration-300 flex flex-col items-center justify-center overflow-hidden">
+              <div className="w-[150px] h-[150px] bg-[rgb(236,244,254,0.5)] rounded-lg border border-purple-200 hover:shadow-md transition duration-300 flex flex-col items-center justify-center overflow-hidden md:gap-2.5 gap-2">
                 <img
                   className="w-[100px] h-[100px] object-cover"
                   src={
