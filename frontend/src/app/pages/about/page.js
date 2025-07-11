@@ -24,7 +24,7 @@ const AboutPage = () => {
               Welcome to Goyat Trading
             </h3>
             <h1 className="text-3xl md:text-5xl font-bold leading-tight">
-              India's Trusted Online Grocery Marketplace
+              Indias Trusted Online Grocery Marketplace
             </h1>
             <p className="text-md md:text-lg font-light text-gray-200">
               Your daily needs — now just a click away. Freshness, speed, and savings delivered to your doorstep.
@@ -52,10 +52,10 @@ const AboutPage = () => {
           Our platform is powered by a robust inventory system, real-time stock updates, and intelligent recommendations tailored to your needs.
         </p>
         <p>
-          Whether you're buying weekly essentials or stocking up for the month, Goyat Trading offers flexible delivery slots, secure payments, and easy returns — all backed by dedicated customer support.
+          Whether youre buying weekly essentials or stocking up for the month, Goyat Trading offers flexible delivery slots, secure payments, and easy returns — all backed by dedicated customer support.
         </p>
         <p>
-          With growing demand across cities and towns, we are expanding rapidly, building fulfillment centers, last-mile delivery teams, and tech infrastructure that supports high-volume operations with speed and accuracy.
+          With growing demand across cities and towns, we are expanding rapidly, building fulfillment centers, last-mile delivery teams, and tech infrastructure that supports high volume operations with speed and accuracy.
         </p>
       </section>
 
