@@ -54,7 +54,7 @@ const createOrder = async (req, res) => {
       return res.status(404).json({ message: "Cart is empty" });
     }
 
-    let shippingCost = 50;
+    let shippingCost = 20;
     let totalAmount = cart.totalAmount;
     if (totalAmount > 500) {
       shippingCost = 0;

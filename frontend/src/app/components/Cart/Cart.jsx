@@ -188,7 +188,7 @@ export default function Cart() {
     }, 0);
   }
   // Shipping logic
-  const shippingCost = subtotal >= 500 ? 0 : 50;
+  const shippingCost = subtotal >= 500 ? 0 : 20;
 
   // Final Total
   const baseAmount = subtotal - discountAmountValue;
@@ -294,6 +294,11 @@ export default function Cart() {
   }, []);
 
   const handleCheckout = () => {
+    if(!user?.email) {
+      toast.error("Please login to proceed to checkout.");
+      router.push("/pages/login");
+      return;
+    }
     router.push("/pages/checkout");
   };
   if (cartItemsValue?.length === 0) {

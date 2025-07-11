@@ -33,13 +33,12 @@ export default function Page() {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showScanner, setShowScanner] = useState(false);
-  const user = useSelector((state) => state.login.user);
+  const {loading, error, user} = useSelector((state) => state.login);
   const { items } = useSelector((state) => state.apiCart);
   const { cartItems } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   const appiedCoupon = useSelector((state) => state.cart.appliedCoupon);
   const couponDiscount = appiedCoupon?.discount;
-  console.log("appiedCoupon:", appiedCoupon);
 
   let cartItemsValue = [];
   if (user?.email) {
@@ -52,16 +51,15 @@ export default function Page() {
     cartItemsValue && cartItemsValue.length > 0
       ? cartItemsValue.reduce((total, item) => {
           const price = item?.productId?.finalPrice ?? item.price;
-          console.log("price:", price);
+    
 
           return total + price * item.quantity;
         }, 0)
       : 0;
-  console.log("couponDiscount:", couponDiscount);
 
   const adjustedCouponDiscount =
     couponDiscount < 100 ? (subtotal * couponDiscount) / 100 : couponDiscount;
-  console.log("adjustedCouponDiscount:", adjustedCouponDiscount);
+
 
   // const tax = subtotal * 0.08;
   const shipping = subtotal == 0 ? 0 : subtotal > 500 ? 0 : 50;
@@ -109,8 +107,7 @@ export default function Page() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form data before submission:", formData);
-
+ 
     if (!validateForm()) return;
     
     setShowScanner(true);
@@ -137,6 +134,16 @@ export default function Page() {
     }
   };
 
+  useEffect(() => {
+    if(loading) return;
+    if (!user?.email) {
+      toast.error("Please login to continue with checkout.");
+      router.push("/pages/login");
+    }
+  }, []);
+  if(loading) {
+    return <div>Loading...</div>
+  }
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4">
