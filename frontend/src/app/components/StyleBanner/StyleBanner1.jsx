@@ -13,7 +13,7 @@ const StyleBanner1 = () => {
           alt="Supermarket banner"
           width={1200}
           height={350}
-          className="w-full h-[350px] object-fill transition-transform duration-300 group-hover:scale-105"
+          className="w-full sm:h-[350px] h-[155px] object-fill transition-transform duration-300 group-hover:scale-105"
         />
       </div>
     </div>
