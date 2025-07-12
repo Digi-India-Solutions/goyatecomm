@@ -7,6 +7,165 @@ import axiosInstance, {
   postData,
   serverURL,
 } from "../../services/FetchNodeServices";
+import "react-toastify/dist/ReactToastify.css";
+import {
+  PDFDownloadLink,
+  Page,
+  Text,
+  View,
+  Document,
+  StyleSheet,
+} from "@react-pdf/renderer";
+
+const styles = StyleSheet.create({
+  page: {
+    padding: 40,
+    fontSize: 11,
+    fontFamily: "Helvetica",
+    color: "#333",
+    lineHeight: 1.6,
+  },
+  header: {
+    fontSize: 22,
+    textAlign: "center",
+    marginBottom: 20,
+    fontWeight: "bold",
+    color: "#1A237E",
+  },
+  sectionTitle: {
+    fontSize: 14,
+    marginTop: 20,
+    marginBottom: 8,
+    textDecoration: "underline",
+    fontWeight: "bold",
+  },
+  section: {
+    marginBottom: 4,
+  },
+  table: {
+    display: "table",
+    width: "100%",
+    marginTop: 10,
+    borderStyle: "solid",
+    borderWidth: 1,
+    borderColor: "#ccc",
+  },
+  tableRow: {
+    flexDirection: "row",
+  },
+  tableHeader: {
+    backgroundColor: "#f0f0f0",
+    fontWeight: "bold",
+  },
+  tableCol: {
+    borderRight: "1px solid #ccc",
+    borderBottom: "1px solid #ccc",
+    padding: 6,
+    textAlign: "left",
+  },
+  col1: { width: "40%" },
+  col2: { width: "20%" },
+  col3: { width: "20%" },
+  col4: { width: "20%", borderRight: "none" },
+  summary: {
+    marginTop: 20,
+    fontSize: 12,
+  },
+  bold: {
+    fontWeight: "bold",
+    marginTop: 4,
+  },
+  footer: {
+    marginTop: 40,
+    fontSize: 12,
+    textAlign: "center",
+    color: "#666",
+  },
+});
+
+const InvoicePDF = ({ order }) => {
+  const items = order.items || [];
+  const userName =
+    order.userDetails?.name ||
+    order.shippingAddress?.firstName + " " + order.shippingAddress?.lastName;
+  const orderDate =
+    order.userDetails?.date ||
+    new Date(order.createdAt).toLocaleString("en-IN", {
+      dateStyle: "medium",
+      timeStyle: "short",
+    });
+
+  return (
+    <Document>
+      <Page size="A4" style={styles.page}>
+        <Text style={styles.header}>Goyat Trading Co.</Text>
+
+        <Text style={styles.sectionTitle}>Order Summary</Text>
+        <Text style={styles.section}>Order ID: {order._id}</Text>
+        <Text style={styles.section}>Unique ID: {order.orderUniqueId}</Text>
+        <Text style={styles.section}>Customer: {userName}</Text>
+        {order?.userDetails?.upiId && (
+          <Text style={styles.section}>
+            UPI ID: {order?.userDetails?.upiId}
+          </Text>
+        )}
+        <Text style={styles.section}>Order Date: {orderDate}</Text>
+        <Text style={styles.section}>
+          Payment Status: {order.paymentStatus}
+        </Text>
+        <Text style={styles.section}>
+          Payment Method: {order.paymentMethod}
+        </Text>
+        <Text style={styles.section}>Order Status: {order.orderStatus}</Text>
+
+        <Text style={styles.sectionTitle}>Items</Text>
+        <View style={styles.table}>
+          {/* Table Header */}
+          <View style={[styles.tableRow, styles.tableHeader]}>
+            <Text style={[styles.tableCol, styles.col1]}>Product</Text>
+            <Text style={[styles.tableCol, styles.col2]}>Qty</Text>
+            <Text style={[styles.tableCol, styles.col3]}>Price (Rs.)</Text>
+            <Text style={[styles.tableCol, styles.col4]}>Total (Rs.)</Text>
+          </View>
+
+          {/* Table Rows */}
+          {items.map((item, idx) => {
+            const product = item.productId || {};
+            const price = product.finalPrice || 0;
+            const total = price * item.quantity;
+            return (
+              <View style={styles.tableRow} key={idx}>
+                <Text style={[styles.tableCol, styles.col1]}>
+                  {product.title}
+                </Text>
+                <Text style={[styles.tableCol, styles.col2]}>
+                  {item.quantity}
+                </Text>
+                <Text style={[styles.tableCol, styles.col3]}>
+                  Rs.{price.toFixed(2)}
+                </Text>
+                <Text style={[styles.tableCol, styles.col4]}>
+                  Rs.{total.toFixed(2)}
+                </Text>
+              </View>
+            );
+          })}
+        </View>
+
+        {/* Summary Section */}
+        <View style={styles.summary}>
+          <Text>Shipping Cost: Rs.{order.shippingCost}</Text>
+          <Text style={styles.bold}>Total Amount: Rs.{order.totalAmount}</Text>
+        </View>
+
+        {/* Footer */}
+        <Text style={styles.footer}>
+          Thank you for shopping with Goyat Trading Co.
+        </Text>
+      </Page>
+    </Document>
+  );
+};
 
 const EditOrder = () => {
   const { id } = useParams();
@@ -151,8 +310,26 @@ const EditOrder = () => {
               {" "}
               <div className="col-lg-8">
                 <div className="card shadow-lg">
-                  <div className="card-header bg-primary text-white">
+                  <div className="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h5 className="card-title">Order Details</h5>
+                    <div>
+                      <PDFDownloadLink
+                        document={<InvoicePDF order={orderData} />}
+                        fileName={`Invoice_ ${orderData?.orderUniqueId}.pdf`}
+                      >
+                        {({ loading }) =>
+                          loading ? (
+                            <button className="btn btn-secondary">
+                              Loading...
+                            </button>
+                          ) : (
+                            <button className="btn btn-primary">
+                              Download Invoice
+                            </button>
+                          )
+                        }
+                      </PDFDownloadLink>
+                    </div>
                   </div>
                   <div className="table-responsive">
                     <table className="table table-bordered">

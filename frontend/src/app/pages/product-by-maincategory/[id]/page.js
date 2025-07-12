@@ -258,18 +258,9 @@ const Page = () => {
               {/* Product Content */}
               <div>
                 <Link href={`/pages/shop/${product._id}`}>
-                  <h3
-                    className="my-2 text-sm md:text-md font-bold line-clamp-2"
-                    style={{
-                      background:
-                        "linear-gradient(90deg, #e9d5ff 0%, #d8b4fe 50%)",
-                      padding: "0px 10px",
-                      maxWidth: "fit-content",
-                      borderRadius: "0 10px 10px 0",
-                    }}
-                  >
-                    {product.title}
-                  </h3>
+                  <h3 className="mt-2 text-sm md:text-md font-normal md:font-semibold line-clamp-1 ">
+                      {product.title}
+                    </h3>
                   <h3 className="mt-1 text-sm text-gray-800  font-semibold italic line-clamp-1">
                   {product.pages}
                   </h3>

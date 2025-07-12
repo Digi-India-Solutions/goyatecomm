@@ -350,19 +350,9 @@ const Shop = () => {
 
                   <div className="w-full">
                     <Link href={`/pages/shop/${product._id}`}>
-                      <h3
-                        style={{
-                          background:
-                            "linear-gradient(90deg, #e9d5ff 0%, #d8b4fe 50%)",
-                          color: "var(--purple)",
-                          maxWidth: "fit-content",
-                          padding: "0px 10px",
-                          fontSize: "14px",
-                        }}
-                        className="my-2 text-sm md:text-md font-normal md:font-bold line-clamp-2 rounded-l-0 rounded-r-2xl"
-                      >
-                        {product.title}
-                      </h3>
+                  <h3 className="mt-2 text-sm md:text-md font-normal md:font-semibold line-clamp-1 ">
+                      {product.title}
+                    </h3>
                       <h3 className="mt-1 text-sm text-gray-800 font-semibold italic line-clamp-1">
                       {product.pages}
                       </h3>

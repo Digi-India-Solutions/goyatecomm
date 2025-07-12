@@ -87,8 +87,8 @@ const Footer = () => {
           <div className="mb-2 flex items-center gap-4">
             <Mail style={{ color: "var(--purple)" }} />{" "}
             <div className="flex flex-col items-left">
-              <p className=" text-gray-600">info@goyattrading.shop</p>
-              <p className=" text-gray-600">info@goyattrading.support</p>
+              <p className=" text-gray-600">tradinggoyat@gmail.com</p>
+              <p className=" text-gray-600">tradinggoyat@gmail.com</p>
             </div>
           </div>
         </div>

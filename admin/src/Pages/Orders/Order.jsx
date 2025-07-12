@@ -67,7 +67,7 @@ const UploadOrders = () => {
     try {
       const response = await axiosInstance.post(
         "/api/v1/order/upload-orders",
-        { orders: jsonData }
+        { orders: filteredData }
       );
       toast.dismiss(loader);
       setJsonData([]);
