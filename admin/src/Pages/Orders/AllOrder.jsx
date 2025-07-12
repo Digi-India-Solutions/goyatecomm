@@ -24,7 +24,7 @@ const AllOrder = () => {
         `/api/v1/order/get-all-orders-admin?page=${page}&limit=${limit}`
       );
       if (res.status === 200) {
-        setOrders(res.data?.orders?.reverse());
+        setOrders(res.data?.orders);
         setTotalPages(res.data.totalPages);
       }
     } catch (err) {
