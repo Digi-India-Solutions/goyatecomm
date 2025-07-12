@@ -72,37 +72,39 @@ const Contact = () => {
       <div className="grid md:grid-cols-2 gap-12 items-start">
         {/* Left: Contact Info */}
         <div>
-          <h2 className="text-xl font-semibold mb-4">Our Offices</h2>
+          <h2 className="text-xl font-semibold mb-4">Our WareHouse</h2>
           <p className="mb-6 text-gray-600">
-            GROUND FLOOR, SCO NO. 20, Goyat trading co., VASANT VIHAR PHASE NO. 1, HIMMATGARH DHAKOLI, ZIRAKPUR, SAS NAGAR MOHALI, SAS Nagar, Punjab,
+
+            Delhi, Jaipur, Mumbai, Ahemdabad etc.
+           
           </p>
 
           <div className="flex flex-col md:flex-row gap-8">
             <div className="mb-8 flex-1">
               <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
-                <MapPin className="w-4 h-4" />
-                <span>Delhi</span>
+                {/* <MapPin className="w-4 h-4" /> */}
+                {/* <span>Delhi</span> */}
               </div>
-              <h3 className="text-lg font-semibold">GOYAT TRADING</h3>
-              <p className="text-gray-600">
+              <h3 className="text-lg font-semibold">Contact Us</h3>
+              {/* <p className="text-gray-600">
                 VASANT VIHAR PHASE NO. 1, HIMMATGARH DHAKOLI, Punjab, India
-              </p>
-              <p className="font-medium mt-1">+91 8283863884</p>
+              </p> */}
+              <p className="font-medium mt-1">+91 9988438221</p>
               <p className="text-sm mb-2">info@goyattrading.shop</p>
 
               <div className="text-sm text-gray-600 mt-2">
-                <p>
-                  <strong>Saturday</strong> (Ashura): 9:30 am – 6:30 pm{" "}
+                {/* <p>
+                  <strong>Saturday</strong> : 9:30 am – 6:30 pm{" "}
                   <span className="italic text-red-500">
                     Hours might differ
                   </span>
-                </p>
+                </p> */}
                 <p>
-                  <strong>Sunday</strong> (Ashura):{" "}
+                  <strong>Sunday</strong> :{" "}
                   <span className="text-red-500">Closed</span>
                 </p>
                 <p>
-                  <strong>Monday – Friday:</strong> 9:30 am – 6:30 pm
+                  <strong>Monday – Saturday:</strong> 9:30 am – 11:00pm
                 </p>
               </div>
             </div>

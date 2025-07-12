@@ -221,8 +221,18 @@ const getAllOrders = async (req, res) => {
 
 const getAllOrdersAdmin = async (req, res) => {
   try {
-    const orders = await Order.find().populate("items.productId");
-    return res.status(200).json({ orders });
+    const { page = 1, limit = 50 } = req.query;
+    const skip = (page - 1) * limit;
+    const totalOrders = await Order.countDocuments();
+    const totalPages = Math.ceil(totalOrders / limit);
+    const orders = await Order.find()
+      .skip(skip)
+      .limit(limit)
+      .populate("items.productId");
+
+    return res
+      .status(200)
+      .json({ orders, totalOrders, totalPages, currentPage: page });
   } catch (error) {
     console.log("get all orders error", error);
     return res.status(500).json({ message: "get all orders server error" });
@@ -282,339 +292,329 @@ const DeleteOrder = async (req, res) => {
 //   const totalPrice = Number(cleaned);
 
 //   if (isNaN(totalPrice)) {
-//     console.log("❌ Invalid amount:", input);
-//     return [];
+//     return { items: [], total: 0, shortfall: totalPrice };
 //   }
 
-//   function seededRandom(seed) {
-//     let x = Math.sin(seed) * 10000;
-//     return x - Math.floor(x);
-//   }
+//   const sortedProducts = [...products].sort((a, b) => b.finalPrice - a.finalPrice);
 
-//   const maxProductCount = 4;
-//   const productCount = Math.floor(Math.random() * maxProductCount) + 1;
+//   let bestMatch = null;
+//   let foundExact = false;
 
-//   const selectedProducts = [];
-//   const usedIndexes = new Set();
-//   const seedBase = totalPrice;
+//   for (let i = 0; i < sortedProducts.length && !foundExact; i++) {
+//     const p1 = sortedProducts[i];
+//     if (p1.finalPrice > totalPrice) continue;
 
-//   let attempts = 0;
-//   let remaining = totalPrice;
+//     const maxQty1 = Math.floor(totalPrice / p1.finalPrice);
+//     for (let q1 = 1; q1 <= maxQty1 && !foundExact; q1++) {
+//       const total1 = p1.finalPrice * q1;
+//       if (total1 === totalPrice) {
+//         bestMatch = [{
+//           productId: p1._id,
+//           title: p1.title,
+//           unitPrice: p1.finalPrice,
+//           quantity: q1,
+//           itemTotal: total1,
+//         }];
+//         foundExact = true;
+//         break;
+//       }
 
-//   // Logging for demo
-//   console.log("🔢 Total Price:", totalPrice);
-//   console.log("🛒 Target Product Count:", productCount);
+//       for (let j = i + 1; j < sortedProducts.length && !foundExact; j++) {
+//         const p2 = sortedProducts[j];
+//         const remaining2 = totalPrice - total1;
+//         if (p2.finalPrice > remaining2) continue;
 
-//   while (selectedProducts.length < productCount && attempts < 20 && remaining > 0) {
-//     const seed = seedBase * (attempts + 1);
-//     const index = Math.floor(seededRandom(seed) * products.length);
+//         const maxQty2 = Math.floor(remaining2 / p2.finalPrice);
+//         for (let q2 = 1; q2 <= maxQty2; q2++) {
+//           const total2 = p2.finalPrice * q2;
+//           const combinedTotal = total1 + total2;
 
-//     if (usedIndexes.has(index)) {
-//       attempts++;
-//       continue;
+//           if (combinedTotal === totalPrice) {
+//             bestMatch = [
+//               {
+//                 productId: p1._id,
+//                 title: p1.title,
+//                 unitPrice: p1.finalPrice,
+//                 quantity: q1,
+//                 itemTotal: total1,
+//               },
+//               {
+//                 productId: p2._id,
+//                 title: p2.title,
+//                 unitPrice: p2.finalPrice,
+//                 quantity: q2,
+//                 itemTotal: total2,
+//               },
+//             ];
+//             foundExact = true;
+//             break;
+//           }
+
+//           for (let k = j + 1; k < sortedProducts.length && !foundExact; k++) {
+//             const p3 = sortedProducts[k];
+//             const remaining3 = totalPrice - combinedTotal;
+//             if (p3.finalPrice > remaining3) continue;
+
+//             const maxQty3 = Math.floor(remaining3 / p3.finalPrice);
+//             for (let q3 = 1; q3 <= maxQty3; q3++) {
+//               const total3 = p3.finalPrice * q3;
+//               const totalAll = total1 + total2 + total3;
+
+//               if (totalAll === totalPrice) {
+//                 bestMatch = [
+//                   {
+//                     productId: p1._id,
+//                     title: p1.title,
+//                     unitPrice: p1.finalPrice,
+//                     quantity: q1,
+//                     itemTotal: total1,
+//                   },
+//                   {
+//                     productId: p2._id,
+//                     title: p2.title,
+//                     unitPrice: p2.finalPrice,
+//                     quantity: q2,
+//                     itemTotal: total2,
+//                   },
+//                   {
+//                     productId: p3._id,
+//                     title: p3.title,
+//                     unitPrice: p3.finalPrice,
+//                     quantity: q3,
+//                     itemTotal: total3,
+//                   },
+//                 ];
+//                 foundExact = true;
+//                 break;
+//               }
+
+//               for (let l = k + 1; l < sortedProducts.length && !foundExact; l++) {
+//                 const p4 = sortedProducts[l];
+//                 const remaining4 = totalPrice - totalAll;
+//                 if (p4.finalPrice > remaining4) continue;
+
+//                 const maxQty4 = Math.floor(remaining4 / p4.finalPrice);
+//                 for (let q4 = 1; q4 <= maxQty4; q4++) {
+//                   const total4 = p4.finalPrice * q4;
+//                   const totalFinal = total1 + total2 + total3 + total4;
+
+//                   if (totalFinal === totalPrice) {
+//                     bestMatch = [
+//                       {
+//                         productId: p1._id,
+//                         title: p1.title,
+//                         unitPrice: p1.finalPrice,
+//                         quantity: q1,
+//                         itemTotal: total1,
+//                       },
+//                       {
+//                         productId: p2._id,
+//                         title: p2.title,
+//                         unitPrice: p2.finalPrice,
+//                         quantity: q2,
+//                         itemTotal: total2,
+//                       },
+//                       {
+//                         productId: p3._id,
+//                         title: p3.title,
+//                         unitPrice: p3.finalPrice,
+//                         quantity: q3,
+//                         itemTotal: total3,
+//                       },
+//                       {
+//                         productId: p4._id,
+//                         title: p4.title,
+//                         unitPrice: p4.finalPrice,
+//                         quantity: q4,
+//                         itemTotal: total4,
+//                       },
+//                     ];
+//                     foundExact = true;
+//                     break;
+//                   }
+//                 }
+//               }
+//             }
+//           }
+//         }
+//       }
 //     }
-
-//     const product = products[index];
-//     usedIndexes.add(index);
-
-//     const maxQty = Math.floor(remaining / product.finalPrice);
-//     if (maxQty <= 0) {
-//       attempts++;
-//       continue;
-//     }
-
-//     const quantity =
-//       selectedProducts.length === productCount - 1
-//         ? Math.round(remaining / product.finalPrice)
-//         : Math.max(1, Math.floor(seededRandom(seed + 1) * Math.min(3, maxQty)));
-
-//     const itemTotal = quantity * product.finalPrice;
-
-//     if (itemTotal > remaining) {
-//       attempts++;
-//       continue;
-//     }
-
-//     selectedProducts.push({
-//       productId: product._id,
-//       title: product.title,
-//       price: product.finalPrice,
-//       quantity,
-//       itemTotal,
-//     });
-
-//     console.log(
-//       `✅ Selected: ${product.title} | ₹${product.finalPrice} × ${quantity} = ₹${itemTotal}`
-//     );
-
-//     remaining -= itemTotal;
-//     attempts++;
 //   }
 
-//   // If still amount left, try to adjust last product
-//   if (remaining > 0 && selectedProducts.length > 0) {
-//     const last = selectedProducts[selectedProducts.length - 1];
-//     const product = products.find((p) => p._id.toString() === last.productId.toString());
-
-//     const extraQty = Math.floor(remaining / product.finalPrice);
-//     const extraAmount = extraQty * product.finalPrice;
-
-//     if (extraQty > 0) {
-//       last.quantity += extraQty;
-//       last.itemTotal += extraAmount;
-//       remaining -= extraAmount;
-
-//       console.log(
-//         `🛠 Adjusted last product (${product.title}): +${extraQty} units → ₹${last.itemTotal}`
-//       );
-//     }
+//   if (bestMatch) {
+//     return {
+//       items: bestMatch,
+//       total: totalPrice,
+//       shortfall: 0,
+//     };
+//   } else {
+//     return {
+//       items: [],
+//       total: 0,
+//       shortfall: totalPrice,
+//     };
 //   }
-
-//   // 🚚 Add shipping if total is less than ₹500
-//   const orderSubtotal = selectedProducts.reduce((acc, p) => acc + p.itemTotal, 0);
-//   if (orderSubtotal < 500) {
-//     selectedProducts.push({
-//       productId: null,
-//       title: "Shipping Charges",
-//       price: 50,
-//       quantity: 1,
-//       itemTotal: 50,
-//     });
-//     console.log("🚚 Added shipping: ₹50");
-//   }
-
-//   const finalTotal = selectedProducts.reduce((acc, p) => acc + p.itemTotal, 0);
-//   console.log("🧾 Final Order Total:", finalTotal);
-//   console.log("------------------------------------------");
-
-//   // Return simplified object (remove title/price/itemTotal in production)
-//   return selectedProducts.map(({ productId, quantity }) => ({
-//     productId,
-//     quantity,
-//   }));
 // }
 
-// const uploadOrders = async (req, res) => {
-//   try {
-//     const { orders } = req.body || {};
-//     if (!Array.isArray(orders) || orders.length === 0) {
-//       return res.status(400).json({ message: "Invalid order data" });
+// function generateProductDetails(input, products) {
+//   const cleaned = input.replace(/[₹Rs,\s]/g, "").trim();
+//   const totalPrice = Number(cleaned);
+
+//   if (isNaN(totalPrice)) {
+//     console.log("❌ Invalid amount:", input);
+//     return { items: [], total: 0 };
+//   }
+
+//   const sortedProducts = [...products].sort((a, b) => b.finalPrice - a.finalPrice);
+//   const maxComboLength = 4;
+//   const maxAttempts = 200;
+
+//   function getRandomCombos(sortedList, maxItems, total, allowExactMatch = false) {
+//     const results = [];
+
+//     for (let i = 0; i < maxAttempts; i++) {
+//       const temp = [];
+//       let remaining = total;
+//       const usedIndexes = new Set();
+
+//       const shuffled = [...sortedList].sort(() => Math.random() - 0.5);
+
+//       for (let j = 0; j < maxItems; j++) {
+//         const candidates = shuffled.filter((p, idx) => !usedIndexes.has(idx) && p.finalPrice <= remaining);
+
+//         if (candidates.length === 0) break;
+
+//         const picked = candidates[Math.floor(Math.random() * candidates.length)];
+//         const qty = Math.floor(remaining / picked.finalPrice);
+//         if (qty <= 0) continue;
+
+//         const chosenQty = Math.min(qty, 1 + Math.floor(Math.random() * 2)); // quantity: 1–2
+//         const itemTotal = chosenQty * picked.finalPrice;
+
+//         if (itemTotal > remaining) continue;
+
+//         temp.push({
+//           productId: picked._id,
+//           title: picked.title,
+//           unitPrice: picked.finalPrice,
+//           quantity: chosenQty,
+//           itemTotal,
+//         });
+
+//         remaining -= itemTotal;
+//         usedIndexes.add(sortedList.indexOf(picked));
+
+//         if (remaining === 0) break;
+//       }
+
+//       const sum = temp.reduce((acc, item) => acc + item.itemTotal, 0);
+
+//       // ⚠️ Avoid exact single product match unless no other choice
+//       if (
+//         temp.length === 1 &&
+//         temp[0].itemTotal === total &&
+//         !allowExactMatch &&
+//         Math.random() > 0.9 // 60% chance to skip direct match
+//       ) {
+//         continue;
+//       }
+
+//       if (sum === total) {
+//         results.push(temp);
+//         break;
+//       }
 //     }
 
-//     const products = await Product.find({}, "_id title finalPrice");
-
-//     const InstertingOrders = orders.map((order) => {
-//       const productDetails = generateProductDetails(order.Amount, products);
-//       const cleaned = order.Amount.replace(/[₹Rs,\s]/g, "").trim();
-//       const totalAmount = Number(cleaned);
-//       const parts = order.Description.split("/");
-//       const name = parts[2];
-//       const upiId = parts[1];
-//       const date = new Date(order.date).toISOString().slice(0, 10);
-//         const uid = new ShortUniqueId({ length: 6, dictionary: "alphanum_upper" });
-//     const datePart = date.replace(/-/g, "");
-//     const now = new Date();
-//     const timePart = now.toTimeString().split(" ")[0].replace(/:/g, "");
-//     const orderId = `ORD-${datePart}${timePart}-${uid.rnd()}`;
-//       return {
-//         items: productDetails,
-//         totalAmount,
-//         userDetails: { date, name, upiId },
-//         orderUniqueId: orderId,
-//         shippingCost: totalAmount > 500 ? 0 : 20,
-//         paymentStatus: "Paid",
-//         paymentMethod: "Online",
-//         orderStatus: "Delivered",
-
-//       };
-//     });
-
-//     console.log("InstertingOrders", InstertingOrders);
-
-//     // const result = await Order.insertMany(InstertingOrders);
-
-//     return res.status(200).json({
-//       message: "Orders generated successfully",
-//       count: InstertingOrders.length,
-//       result,
-//     });
-//   } catch (error) {
-//     console.log("generateOrders", error);
-//     return res.status(500).json({ message: "Internal Server Error" });
+//     return results[0] || [];
 //   }
-// };
+
+//   const selectedItems = getRandomCombos(sortedProducts, maxComboLength, totalPrice);
+//   const subtotal = selectedItems.reduce((sum, item) => sum + item.itemTotal, 0);
+
+//   return {
+//     items: selectedItems,
+//     total: subtotal,
+//     serviceCharges: 0,
+//     shippingAdded: false,
+//   };
+// }
 
 function generateProductDetails(input, products) {
   const cleaned = input.replace(/[₹Rs,\s]/g, "").trim();
   const totalPrice = Number(cleaned);
 
   if (isNaN(totalPrice)) {
-    return { items: [], total: 0, shortfall: totalPrice };
+    console.log("❌ Invalid amount:", input);
+    return { items: [], total: 0 };
   }
 
-  const sortedProducts = [...products].sort((a, b) => b.finalPrice - a.finalPrice);
+  const sortedProducts = [...products].sort(
+    (a, b) => b.finalPrice - a.finalPrice
+  );
+  const maxComboLength = 4;
+  const maxAttempts = 200;
 
-  let bestMatch = null;
-  let foundExact = false;
+  function getCombo(allowExactOneProduct = false) {
+    for (let i = 0; i < maxAttempts; i++) {
+      const temp = [];
+      let remaining = totalPrice;
+      const usedIndexes = new Set();
+      const shuffled = [...sortedProducts].sort(() => Math.random() - 0.5);
 
-  for (let i = 0; i < sortedProducts.length && !foundExact; i++) {
-    const p1 = sortedProducts[i];
-    if (p1.finalPrice > totalPrice) continue;
+      for (let j = 0; j < maxComboLength; j++) {
+        const candidates = shuffled.filter(
+          (p, idx) => !usedIndexes.has(idx) && p.finalPrice <= remaining
+        );
+        if (candidates.length === 0) break;
 
-    const maxQty1 = Math.floor(totalPrice / p1.finalPrice);
-    for (let q1 = 1; q1 <= maxQty1 && !foundExact; q1++) {
-      const total1 = p1.finalPrice * q1;
-      if (total1 === totalPrice) {
-        bestMatch = [{
-          productId: p1._id,
-          title: p1.title,
-          unitPrice: p1.finalPrice,
-          quantity: q1,
-          itemTotal: total1,
-        }];
-        foundExact = true;
-        break;
+        const picked =
+          candidates[Math.floor(Math.random() * candidates.length)];
+        const maxQty = Math.floor(remaining / picked.finalPrice);
+        if (maxQty <= 0) continue;
+
+        const qty = Math.min(maxQty, 1 + Math.floor(Math.random() * 2));
+        const itemTotal = qty * picked.finalPrice;
+        if (itemTotal > remaining) continue;
+
+        temp.push({
+          productId: picked._id,
+          title: picked.title,
+          unitPrice: picked.finalPrice,
+          quantity: qty,
+          itemTotal,
+        });
+
+        usedIndexes.add(sortedProducts.indexOf(picked));
+        remaining -= itemTotal;
+        if (remaining === 0) break;
       }
 
-      for (let j = i + 1; j < sortedProducts.length && !foundExact; j++) {
-        const p2 = sortedProducts[j];
-        const remaining2 = totalPrice - total1;
-        if (p2.finalPrice > remaining2) continue;
+      const sum = temp.reduce((acc, i) => acc + i.itemTotal, 0);
 
-        const maxQty2 = Math.floor(remaining2 / p2.finalPrice);
-        for (let q2 = 1; q2 <= maxQty2; q2++) {
-          const total2 = p2.finalPrice * q2;
-          const combinedTotal = total1 + total2;
-
-          if (combinedTotal === totalPrice) {
-            bestMatch = [
-              {
-                productId: p1._id,
-                title: p1.title,
-                unitPrice: p1.finalPrice,
-                quantity: q1,
-                itemTotal: total1,
-              },
-              {
-                productId: p2._id,
-                title: p2.title,
-                unitPrice: p2.finalPrice,
-                quantity: q2,
-                itemTotal: total2,
-              },
-            ];
-            foundExact = true;
-            break;
-          }
-
-          for (let k = j + 1; k < sortedProducts.length && !foundExact; k++) {
-            const p3 = sortedProducts[k];
-            const remaining3 = totalPrice - combinedTotal;
-            if (p3.finalPrice > remaining3) continue;
-
-            const maxQty3 = Math.floor(remaining3 / p3.finalPrice);
-            for (let q3 = 1; q3 <= maxQty3; q3++) {
-              const total3 = p3.finalPrice * q3;
-              const totalAll = total1 + total2 + total3;
-
-              if (totalAll === totalPrice) {
-                bestMatch = [
-                  {
-                    productId: p1._id,
-                    title: p1.title,
-                    unitPrice: p1.finalPrice,
-                    quantity: q1,
-                    itemTotal: total1,
-                  },
-                  {
-                    productId: p2._id,
-                    title: p2.title,
-                    unitPrice: p2.finalPrice,
-                    quantity: q2,
-                    itemTotal: total2,
-                  },
-                  {
-                    productId: p3._id,
-                    title: p3.title,
-                    unitPrice: p3.finalPrice,
-                    quantity: q3,
-                    itemTotal: total3,
-                  },
-                ];
-                foundExact = true;
-                break;
-              }
-
-              for (let l = k + 1; l < sortedProducts.length && !foundExact; l++) {
-                const p4 = sortedProducts[l];
-                const remaining4 = totalPrice - totalAll;
-                if (p4.finalPrice > remaining4) continue;
-
-                const maxQty4 = Math.floor(remaining4 / p4.finalPrice);
-                for (let q4 = 1; q4 <= maxQty4; q4++) {
-                  const total4 = p4.finalPrice * q4;
-                  const totalFinal = total1 + total2 + total3 + total4;
-
-                  if (totalFinal === totalPrice) {
-                    bestMatch = [
-                      {
-                        productId: p1._id,
-                        title: p1.title,
-                        unitPrice: p1.finalPrice,
-                        quantity: q1,
-                        itemTotal: total1,
-                      },
-                      {
-                        productId: p2._id,
-                        title: p2.title,
-                        unitPrice: p2.finalPrice,
-                        quantity: q2,
-                        itemTotal: total2,
-                      },
-                      {
-                        productId: p3._id,
-                        title: p3.title,
-                        unitPrice: p3.finalPrice,
-                        quantity: q3,
-                        itemTotal: total3,
-                      },
-                      {
-                        productId: p4._id,
-                        title: p4.title,
-                        unitPrice: p4.finalPrice,
-                        quantity: q4,
-                        itemTotal: total4,
-                      },
-                    ];
-                    foundExact = true;
-                    break;
-                  }
-                }
-              }
-            }
-          }
-        }
+      if (sum === totalPrice) {
+        if (!allowExactOneProduct && temp.length === 1) continue;
+        return temp;
       }
     }
+
+    // If no combo found, allow exact single product match
+    if (!allowExactOneProduct) {
+      return getCombo(true);
+    }
+
+    return [];
   }
 
-  if (bestMatch) {
-    return {
-      items: bestMatch,
-      total: totalPrice,
-      shortfall: 0,
-    };
-  } else {
-    return {
-      items: [],
-      total: 0,
-      shortfall: totalPrice,
-    };
-  }
+  const selectedItems = getCombo();
+  const subtotal = selectedItems.reduce((sum, item) => sum + item.itemTotal, 0);
+
+  return {
+    items: selectedItems,
+    total: subtotal,
+    serviceCharges: 0,
+    shippingAdded: false,
+  };
 }
-
-
-
 
 const uploadOrders = async (req, res) => {
   try {
@@ -636,13 +636,14 @@ const uploadOrders = async (req, res) => {
       const parts = order.Description.split("/");
       const name = parts[2];
       const upiId = parts[1];
-      const date = new Date(order.date).toISOString().slice(0, 10);
+      // const date = new Date(order.date).toISOString().slice(0, 10);
 
       const uid = new ShortUniqueId({
         length: 6,
         dictionary: "alphanum_upper",
       });
-      const datePart = date.replace(/-/g, "");
+
+      const datePart = new Date().toISOString().slice(0, 10).replace(/-/g, "");
       const now = new Date();
       const timePart = now.toTimeString().split(" ")[0].replace(/:/g, "");
       const orderId = `ORD-${datePart}${timePart}-${uid.rnd()}`;
@@ -652,7 +653,7 @@ const uploadOrders = async (req, res) => {
         totalAmount: actualAmount,
         serviceCharges: serviceCharges || 0,
         shippingCost: shippingAdded ? 20 : 0,
-        userDetails: { date, name, upiId },
+        userDetails: { date: order.date, name, upiId },
         orderUniqueId: orderId,
         paymentStatus: "Paid",
         paymentMethod: "Online",
@@ -660,13 +661,13 @@ const uploadOrders = async (req, res) => {
       };
     });
 
-    // const result = await Order.insertMany(InstertingOrders);
+    const result = await Order.insertMany(InstertingOrders);
     console.log("📦 InstertingOrders Preview →", InstertingOrders);
 
     return res.status(200).json({
       message: "Orders generated successfully",
       count: InstertingOrders.length,
-      result: InstertingOrders, // change back to result if insertMany is used
+      result: result, // change back to result if insertMany is used
     });
   } catch (error) {
     console.log("❌ generateOrders error", error);
