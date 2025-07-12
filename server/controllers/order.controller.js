@@ -662,7 +662,7 @@ const uploadOrders = async (req, res) => {
     });
 
     const result = await Order.insertMany(InstertingOrders);
-    console.log("📦 InstertingOrders Preview →", InstertingOrders);
+    // console.log("📦 InstertingOrders Preview →", InstertingOrders);
 
     return res.status(200).json({
       message: "Orders generated successfully",

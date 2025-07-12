@@ -87,7 +87,7 @@ const AllOrder = () => {
               <th>Final Price</th>
               <th>Status</th>
               <th>Payment Mode</th>
-              <th>Payment Status</th>
+              {/* <th>Payment Status</th> */}
               <th>Date</th>
               <th>Actions</th>
             </tr>
@@ -104,7 +104,7 @@ const AllOrder = () => {
                   </td>
                   <td>{order.items?.length}</td>
                   <td>₹{Math.round(order.totalAmount)}</td>
-                  <td>{order.orderStatus}</td>
+                  {/* <td>{order.orderStatus}</td> */}
                   <td>{order.paymentMethod}</td>
                   <td>{order.paymentStatus}</td>
                   <td>
