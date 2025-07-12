@@ -221,9 +221,7 @@ const getAllOrders = async (req, res) => {
 
 const getAllOrdersAdmin = async (req, res) => {
   try {
-    const orders = await Order.find().populate(
-      "items.productId"
-    );
+    const orders = await Order.find().populate("items.productId");
     return res.status(200).json({ orders });
   } catch (error) {
     console.log("get all orders error", error);
@@ -432,7 +430,7 @@ const DeleteOrder = async (req, res) => {
 //     });
 
 //     console.log("InstertingOrders", InstertingOrders);
-    
+
 //     // const result = await Order.insertMany(InstertingOrders);
 
 //     return res.status(200).json({
@@ -446,159 +444,175 @@ const DeleteOrder = async (req, res) => {
 //   }
 // };
 
-
 function generateProductDetails(input, products) {
   const cleaned = input.replace(/[₹Rs,\s]/g, "").trim();
   const totalPrice = Number(cleaned);
 
   if (isNaN(totalPrice)) {
-    console.log("❌ Invalid amount:", input);
-    return { items: [], total: 0 };
-  }
-
-  function seededRandom(seed) {
-    let x = Math.sin(seed) * 10000;
-    return x - Math.floor(x);
+    return { items: [], total: 0, shortfall: totalPrice };
   }
 
   const sortedProducts = [...products].sort((a, b) => b.finalPrice - a.finalPrice);
-  const maxProductCount = 4;
-  const productCount = Math.floor(Math.random() * maxProductCount) + 1;
 
-  const selectedProducts = [];
-  const usedIndexes = new Set();
-  let attempts = 0;
-  let remaining = totalPrice;
+  let bestMatch = null;
+  let foundExact = false;
 
-  console.log("🔢 Target Price:", totalPrice);
-  console.log("🎯 Attempting with", productCount, "products");
+  for (let i = 0; i < sortedProducts.length && !foundExact; i++) {
+    const p1 = sortedProducts[i];
+    if (p1.finalPrice > totalPrice) continue;
 
-  while (selectedProducts.length < productCount && attempts < 20 && remaining > 0) {
-    const seed = totalPrice * (attempts + 1);
-    const index = Math.floor(seededRandom(seed) * sortedProducts.length);
+    const maxQty1 = Math.floor(totalPrice / p1.finalPrice);
+    for (let q1 = 1; q1 <= maxQty1 && !foundExact; q1++) {
+      const total1 = p1.finalPrice * q1;
+      if (total1 === totalPrice) {
+        bestMatch = [{
+          productId: p1._id,
+          title: p1.title,
+          unitPrice: p1.finalPrice,
+          quantity: q1,
+          itemTotal: total1,
+        }];
+        foundExact = true;
+        break;
+      }
 
-    if (usedIndexes.has(index)) {
-      attempts++;
-      continue;
+      for (let j = i + 1; j < sortedProducts.length && !foundExact; j++) {
+        const p2 = sortedProducts[j];
+        const remaining2 = totalPrice - total1;
+        if (p2.finalPrice > remaining2) continue;
+
+        const maxQty2 = Math.floor(remaining2 / p2.finalPrice);
+        for (let q2 = 1; q2 <= maxQty2; q2++) {
+          const total2 = p2.finalPrice * q2;
+          const combinedTotal = total1 + total2;
+
+          if (combinedTotal === totalPrice) {
+            bestMatch = [
+              {
+                productId: p1._id,
+                title: p1.title,
+                unitPrice: p1.finalPrice,
+                quantity: q1,
+                itemTotal: total1,
+              },
+              {
+                productId: p2._id,
+                title: p2.title,
+                unitPrice: p2.finalPrice,
+                quantity: q2,
+                itemTotal: total2,
+              },
+            ];
+            foundExact = true;
+            break;
+          }
+
+          for (let k = j + 1; k < sortedProducts.length && !foundExact; k++) {
+            const p3 = sortedProducts[k];
+            const remaining3 = totalPrice - combinedTotal;
+            if (p3.finalPrice > remaining3) continue;
+
+            const maxQty3 = Math.floor(remaining3 / p3.finalPrice);
+            for (let q3 = 1; q3 <= maxQty3; q3++) {
+              const total3 = p3.finalPrice * q3;
+              const totalAll = total1 + total2 + total3;
+
+              if (totalAll === totalPrice) {
+                bestMatch = [
+                  {
+                    productId: p1._id,
+                    title: p1.title,
+                    unitPrice: p1.finalPrice,
+                    quantity: q1,
+                    itemTotal: total1,
+                  },
+                  {
+                    productId: p2._id,
+                    title: p2.title,
+                    unitPrice: p2.finalPrice,
+                    quantity: q2,
+                    itemTotal: total2,
+                  },
+                  {
+                    productId: p3._id,
+                    title: p3.title,
+                    unitPrice: p3.finalPrice,
+                    quantity: q3,
+                    itemTotal: total3,
+                  },
+                ];
+                foundExact = true;
+                break;
+              }
+
+              for (let l = k + 1; l < sortedProducts.length && !foundExact; l++) {
+                const p4 = sortedProducts[l];
+                const remaining4 = totalPrice - totalAll;
+                if (p4.finalPrice > remaining4) continue;
+
+                const maxQty4 = Math.floor(remaining4 / p4.finalPrice);
+                for (let q4 = 1; q4 <= maxQty4; q4++) {
+                  const total4 = p4.finalPrice * q4;
+                  const totalFinal = total1 + total2 + total3 + total4;
+
+                  if (totalFinal === totalPrice) {
+                    bestMatch = [
+                      {
+                        productId: p1._id,
+                        title: p1.title,
+                        unitPrice: p1.finalPrice,
+                        quantity: q1,
+                        itemTotal: total1,
+                      },
+                      {
+                        productId: p2._id,
+                        title: p2.title,
+                        unitPrice: p2.finalPrice,
+                        quantity: q2,
+                        itemTotal: total2,
+                      },
+                      {
+                        productId: p3._id,
+                        title: p3.title,
+                        unitPrice: p3.finalPrice,
+                        quantity: q3,
+                        itemTotal: total3,
+                      },
+                      {
+                        productId: p4._id,
+                        title: p4.title,
+                        unitPrice: p4.finalPrice,
+                        quantity: q4,
+                        itemTotal: total4,
+                      },
+                    ];
+                    foundExact = true;
+                    break;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
-
-    const product = sortedProducts[index];
-    usedIndexes.add(index);
-
-    const maxQty = Math.floor(remaining / product.finalPrice);
-    if (maxQty <= 0) {
-      attempts++;
-      continue;
-    }
-
-    const quantity =
-      selectedProducts.length === productCount - 1
-        ? Math.floor(remaining / product.finalPrice)
-        : Math.max(1, Math.floor(seededRandom(seed + 1) * Math.min(3, maxQty)));
-
-    const itemTotal = quantity * product.finalPrice;
-
-    if (itemTotal > remaining) {
-      attempts++;
-      continue;
-    }
-
-    selectedProducts.push({
-      productId: product._id,
-      title: product.title,
-      unitPrice: product.finalPrice,
-      quantity,
-      itemTotal,
-    });
-
-    console.log(`✅ ${product.title} — ₹${product.finalPrice} × ${quantity} = ₹${itemTotal}`);
-    remaining -= itemTotal;
-    attempts++;
   }
 
-  // Try adjusting last product to match total
-  if (remaining > 0 && selectedProducts.length > 0) {
-    const last = selectedProducts[selectedProducts.length - 1];
-    const extraQty = Math.floor(remaining / last.unitPrice);
-    const extraTotal = extraQty * last.unitPrice;
-
-    if (extraQty > 0) {
-      last.quantity += extraQty;
-      last.itemTotal += extraTotal;
-      remaining -= extraTotal;
-
-      console.log(`🛠 Adjusted: +${extraQty} to ${last.title}, new total ₹${last.itemTotal}`);
-    }
+  if (bestMatch) {
+    return {
+      items: bestMatch,
+      total: totalPrice,
+      shortfall: 0,
+    };
+  } else {
+    return {
+      items: [],
+      total: 0,
+      shortfall: totalPrice,
+    };
   }
-
-  // Fill small gap with service charges
-  const feeOptions = [
-    { title: "Packaging Fee", unitPrice: 20 },
-    { title: "Service Charge", unitPrice: 15 },
-  ];
-
-  for (const fee of feeOptions) {
-    if (remaining >= fee.unitPrice) {
-      selectedProducts.push({
-        productId: null,
-        title: fee.title,
-        unitPrice: fee.unitPrice,
-        quantity: 1,
-        itemTotal: fee.unitPrice,
-      });
-      console.log(`➕ Added Fee: ${fee.title} ₹${fee.unitPrice}`);
-      remaining -= fee.unitPrice;
-    }
-  }
-
-  // If still a small remainder, try again with final product qty
-  if (remaining > 0 && selectedProducts.length > 0) {
-    const last = selectedProducts[selectedProducts.length - 1];
-    const extraQty = Math.floor(remaining / last.unitPrice);
-    const extraTotal = extraQty * last.unitPrice;
-
-    if (extraQty > 0) {
-      last.quantity += extraQty;
-      last.itemTotal += extraTotal;
-      remaining -= extraTotal;
-      console.log(`⚙️ Final Tweak: +${extraQty} to ${last.title}, new total ₹${last.itemTotal}`);
-    }
-  }
-
-  // Add shipping if subtotal < 500
-  const subtotal = selectedProducts
-    .filter(p => p.productId) // ignore fees
-    .reduce((acc, item) => acc + item.itemTotal, 0);
-
-  let shippingAdded = false;
-  if (subtotal < 500) {
-    selectedProducts.push({
-      productId: null,
-      title: "Shipping Fee",
-      unitPrice: 50,
-      quantity: 1,
-      itemTotal: 50,
-    });
-    console.log("🚚 Added Shipping Fee ₹50");
-    shippingAdded = true;
-  }
-
-  const finalTotal = selectedProducts.reduce((acc, p) => acc + p.itemTotal, 0);
-  console.log("🧾 Final Total:", finalTotal);
-  console.log("------------------------------------------------");
-
-  return {
-    items: selectedProducts.map(({ productId, quantity, title, unitPrice, itemTotal }) => ({
-      productId,
-      title,
-      unitPrice,
-      quantity,
-      itemTotal,
-    })),
-    total: finalTotal,
-    shippingAdded,
-  };
 }
+
 
 
 
@@ -612,15 +626,22 @@ const uploadOrders = async (req, res) => {
     const products = await Product.find({}, "_id title finalPrice");
 
     const InstertingOrders = orders.map((order) => {
-      const { items: productDetails, total: actualAmount, shippingAdded } =
-        generateProductDetails(order.Amount, products);
+      const {
+        items: productDetails,
+        total: actualAmount,
+        shippingAdded,
+        serviceCharges,
+      } = generateProductDetails(order.Amount, products);
 
       const parts = order.Description.split("/");
       const name = parts[2];
       const upiId = parts[1];
       const date = new Date(order.date).toISOString().slice(0, 10);
 
-      const uid = new ShortUniqueId({ length: 6, dictionary: "alphanum_upper" });
+      const uid = new ShortUniqueId({
+        length: 6,
+        dictionary: "alphanum_upper",
+      });
       const datePart = date.replace(/-/g, "");
       const now = new Date();
       const timePart = now.toTimeString().split(" ")[0].replace(/:/g, "");
@@ -629,7 +650,8 @@ const uploadOrders = async (req, res) => {
       return {
         items: productDetails,
         totalAmount: actualAmount,
-        shippingCost: shippingAdded ? 50 : 0,
+        serviceCharges: serviceCharges || 0,
+        shippingCost: shippingAdded ? 20 : 0,
         userDetails: { date, name, upiId },
         orderUniqueId: orderId,
         paymentStatus: "Paid",
@@ -660,5 +682,5 @@ export {
   UpdateCheckout,
   DeleteOrder,
   uploadOrders,
-  getAllOrdersAdmin
+  getAllOrdersAdmin,
 };
