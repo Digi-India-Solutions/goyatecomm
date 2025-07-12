@@ -154,7 +154,8 @@ const InvoicePDF = ({ order }) => {
 
         {/* Summary Section */}
         <View style={styles.summary}>
-          <Text>Shipping Cost: Rs.{order.shippingCost}</Text>
+                   <Text>Shipping Cost: {order.shippingCost === 0 ? "Free" : `Rs. ${order.shippingCost}`}</Text>
+         
           <Text style={styles.bold}>Total Amount: Rs.{order.totalAmount}</Text>
         </View>
 

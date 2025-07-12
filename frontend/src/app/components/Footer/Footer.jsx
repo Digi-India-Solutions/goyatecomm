@@ -185,7 +185,7 @@ const Footer = () => {
             </Link>
           </div>
 
-          {!user && !user?.email ? (
+          {!user && !user?.email && (
             <div className="mt-8 flex justify-around align-baseline">
               <Link href={"/pages/login"}>
                 <button className="purple-btn">LogIn</button>
@@ -194,16 +194,7 @@ const Footer = () => {
                 <button className="black-btn">SignUP</button>
               </Link>
             </div>
-          ) : (
-            <div className="mt-8 flex justify-around align-baseline">
-              <Link href={"/pages/userprofile"}>
-                <button className="purple-btn">Profile</button>
-              </Link>
-              <Link href={"/pages/signup"}>
-                <button className="black-btn">Orders</button>
-              </Link>
-            </div>
-          )}
+          ) }
         </div>
       </div>
       <div className="max-w-7xl mx-auto text-center text-sm text-gray-600 leading-relaxed">

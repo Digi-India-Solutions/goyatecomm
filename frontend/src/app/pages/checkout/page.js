@@ -62,7 +62,8 @@ export default function Page() {
 
 
   // const tax = subtotal * 0.08;
-  const shipping = subtotal == 0 ? 0 : subtotal > 500 ? 0 : 50;
+  // const shipping = subtotal == 0 ? 0 : subtotal > 500 ? 0 : 50;
+  const shipping=0
   const total = subtotal + shipping - Number(adjustedCouponDiscount ?? 0);
 
   const handleChange = (e) => {
@@ -82,6 +83,7 @@ export default function Page() {
   useEffect(() => {
     dispatch(getAllCartItemsAPI());
   }, [dispatch]);
+  
   const validateForm = () => {
     const newErrors = {};
 
