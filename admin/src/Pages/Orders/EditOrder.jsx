@@ -59,13 +59,10 @@ const EditOrder = () => {
   const handleLogin2 = async () => {
     const loading = toast.loading("Please wait...");
     try {
-      const res = await axiosInstance.put(
-        `/api/v1/order/update-order/${id}`,
-        {
-          orderStatus,
-          paymentStatus,
-        }
-      );
+      const res = await axiosInstance.put(`/api/v1/order/update-order/${id}`, {
+        orderStatus,
+        paymentStatus,
+      });
       if (res?.status === 200) {
         toast.dismiss(loading);
         toast?.success("Order updated successfully!");
@@ -165,21 +162,35 @@ const EditOrder = () => {
                           <td>{orderData?._id}</td>
                         </tr>
                         <tr>
+                          <th scope="row">Order Unique ID</th>
+                          <td>{orderData?.orderUniqueId}</td>
+                        </tr>
+                        <tr>
                           <th scope="row">User Name</th>
                           <td>
-                            {orderData?.shippingAddress?.firstName}{" "}
-                            {orderData?.shippingAddress?.lastName}{" "}
+                            {orderData.userDetails ? (
+                              orderData.userDetails?.name
+                            ) : (
+                              <>
+                                {orderData?.shippingAddress?.firstName}{" "}
+                                {orderData?.shippingAddress?.lastName}{" "}
+                              </>
+                            )}
                           </td>
                         </tr>
-                        <tr>
+                        {/* <tr>
                           <th scope="row">Email</th>
-                          <td>{orderData?.shippingAddress?.email}</td>
-                        </tr>
-                        <tr>
+                          <td>
+                            {orderData?.userDetails
+                              ? orderData?.userDetails?.email
+                              : orderData?.shippingAddress?.email}
+                          </td>
+                        </tr> */}
+                        {/* <tr>
                           <th scope="row">Phone Number</th>
                           <td>{orderData?.shippingAddress?.phone}</td>
-                        </tr>
-                        <tr>
+                        </tr> */}
+                        {/* <tr>
                           <th scope="row">Address</th>
                           <td>
                             {orderData?.shippingAddress?.address},{" "}
@@ -188,16 +199,18 @@ const EditOrder = () => {
                             {orderData?.shippingAddress?.postalCode} ,
                             {orderData?.shippingAddress?.country}
                           </td>
-                        </tr>
+                        </tr> */}
                         <tr>
                           <th scope="row">Order Date</th>
                           <td>
-                            {new Date(orderData?.createdAt).toLocaleString()}
+                            {orderData?.userDetails
+                              ? orderData?.userDetails?.date
+                              : new Date(orderData?.createdAt).toLocaleString()}
                           </td>
                         </tr>
                         <tr>
                           <th scope="row">Final Price</th>
-                          <td>₹{orderData?.totalAmount}</td>
+                          <td>₹{Math.round(orderData?.totalAmount)}</td>
                         </tr>
                         <tr>
                           <th scope="row">Order Status</th>
@@ -220,10 +233,10 @@ const EditOrder = () => {
                           <th scope="row">Payment Mode</th>
                           <td>{orderData?.paymentMethod}</td>
                         </tr>
-                        <tr>
+                        {/* <tr>
                           <th scope="row">Payment Id</th>
                           <td>{orderData?.paymentInfo?.paymentId || "-"}</td>
-                        </tr>
+                        </tr> */}
                         <tr>
                           <th scope="row">Payment Status</th>
                           <td>
@@ -261,7 +274,7 @@ const EditOrder = () => {
                         <strong>{item?.productId?.productName}</strong>
                         <br />
                         <img
-                          src={`${serverURL}${item?.productId?.images[0]}`}
+                          src={`${serverURL}/public/image/${item?.productId?.images[0]}`}
                           alt={item?.productId?.productName}
                           style={{
                             width: "100px",

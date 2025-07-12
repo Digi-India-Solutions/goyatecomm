@@ -60,6 +60,7 @@ import EditLevel from "../../Pages/LevelImage/EditLevel";
 import AddSubSubCategory from "../../Pages/SubCategory/AddSubCategory";
 import EditSubSubCategory from "../../Pages/SubCategory/EditSubSubCategory";
 import ExcelProductStockUploader from "../../Pages/Products/ExcelProductStockUploader";
+import UploadOrders from "../../Pages/Orders/Order";
 
 const Home = () => {
   const [login, setLogin] = useState(false);
@@ -170,6 +171,8 @@ const Home = () => {
                 path={"/upload-multiproducts-images"}
                 element={<ImageUploader />}
               />
+              <Route path={"/upload-orders"} element={<UploadOrders />} />
+
               <Route path="/multiple-subcategory" element={<ExcelMultipleSubcategory />} />
               <Route path="/multiple-category-and-subcategory" element={<ExcelCategoryAndSubcategory />} />
               <Route path="/update-products-stock" element={<ExcelProductStockUploader />} />

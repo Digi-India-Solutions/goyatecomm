@@ -80,7 +80,7 @@ const Footer = () => {
           <div className="my-2 flex items-center gap-4">
             <Phone style={{ color: "var(--purple)" }} />{" "}
             <div className="flex flex-col items-left text-sm">
-              <p className=" text-gray-600">Monday-Friday: 08am-9pm</p>
+              <p className=" text-gray-600">Monday-Saturday: 9:30 am – 11:00 pm</p>
               {/* <p className="text-lg font-bold mt-1">+91 8283863884</p> */}
             </div>
           </div>
