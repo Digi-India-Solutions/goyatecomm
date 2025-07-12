@@ -188,7 +188,8 @@ export default function Cart() {
     }, 0);
   }
   // Shipping logic
-  const shippingCost = subtotal >= 500 ? 0 : 20;
+  // const shippingCost = subtotal >= 500 ? 0 : 20;
+  const shippingCost = 0; // Assuming free shipping for simplicity
 
   // Final Total
   const baseAmount = subtotal - discountAmountValue;

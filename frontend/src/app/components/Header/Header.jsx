@@ -79,7 +79,8 @@ const Header = () => {
     } else {
       setOpenDropdown(false);
     }
-    dispatch(getAllCartItemsAPI());
+    
+    // dispatch(getAllCartItemsAPI());
     dispatch(fetchCoupons());
   }, [pathname]);
 
@@ -93,10 +94,15 @@ const Header = () => {
     if (user?.email) {
       localStorage.removeItem("wishlistItems");
       dispatch(getAllWishlistItemsApi());
+          // dispatch(getAllCartItemsAPI());
+
+
     } 
   }, [user]);
   
   useEffect(() => {
+          dispatch(getAllCartItemsAPI());
+
     setHasMounted(true);
   }, []);
 

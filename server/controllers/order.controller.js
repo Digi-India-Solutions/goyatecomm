@@ -54,11 +54,11 @@ const createOrder = async (req, res) => {
       return res.status(404).json({ message: "Cart is empty" });
     }
 
-    let shippingCost = 20;
+    let shippingCost = 0;
     let totalAmount = cart.totalAmount;
-    if (totalAmount > 500) {
-      shippingCost = 0;
-    }
+    // if (totalAmount > 500) {
+    //   shippingCost = 0;
+    // }
     const uid = new ShortUniqueId({ length: 6, dictionary: "alphanum_upper" });
     const datePart = new Date().toISOString().slice(0, 10).replace(/-/g, "");
     const now = new Date();
@@ -652,7 +652,7 @@ const uploadOrders = async (req, res) => {
         items: productDetails,
         totalAmount: actualAmount,
         serviceCharges: serviceCharges || 0,
-        shippingCost: shippingAdded ? 20 : 0,
+        shippingCost:  0,
         userDetails: { date: order.date, name, upiId },
         orderUniqueId: orderId,
         paymentStatus: "Paid",

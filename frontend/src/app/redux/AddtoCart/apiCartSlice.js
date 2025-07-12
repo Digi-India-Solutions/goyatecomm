@@ -42,6 +42,11 @@ export const getAllCartItemsAPI = createAsyncThunk(
       const result = await axiosInstance.get("cart/get-all-carts");
       return result.data?.carts;
     } catch (err) {
+      const status = err.response?.status;
+      if (status === 401) {
+        return [];
+      }
+
       return rejectWithValue(err.response?.data || err.message);
     }
   }
@@ -75,7 +80,7 @@ const cartSlice = createSlice({
       const existing = state.items.find(
         (item) => item?.productId?._id ?? item.productId === action.payload?.id
       );
-   
+
       if (!existing) {
         state.items.push({
           productId: { _id: action.payload.id },
@@ -111,7 +116,10 @@ const cartSlice = createSlice({
         if (existing) {
           existing.quantity += newItem.quantity || 1;
         } else {
-          state.items.push({ productId: {_id:newItem.productId}, quantity: 1 });
+          state.items.push({
+            productId: { _id: newItem.productId },
+            quantity: 1,
+          });
         }
 
         state.loading = false;
@@ -139,7 +147,7 @@ const cartSlice = createSlice({
         state.error = null;
       })
       .addCase(getAllCartItemsAPI.fulfilled, (state, action) => {
-        let data=action.payload?.items
+        let data = action.payload?.items;
         state.items = data ? data : [];
       })
       .addCase(getAllCartItemsAPI.rejected, (state, action) => {
@@ -154,6 +162,6 @@ export const {
   removeFromCartState,
   updateStateQuantity,
   addtoCartState,
-  resetCartState
+  resetCartState,
 } = cartSlice.actions;
 export default cartSlice.reducer;

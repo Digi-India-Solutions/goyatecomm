@@ -37,7 +37,165 @@ import toast from "react-hot-toast";
 import { serverUrl } from "@/app/redux/features/axiosInstance";
 import { resetWishlistState } from "@/app/redux/wishlistSlice";
 import { resetCartState } from "@/app/redux/AddtoCart/apiCartSlice";
+import "react-toastify/dist/ReactToastify.css";
+import {
+  PDFDownloadLink,
+  Page,
+  Text,
+  View,
+  Document,
+  StyleSheet,
+} from "@react-pdf/renderer";
 
+const styles = StyleSheet.create({
+  page: {
+    padding: 40,
+    fontSize: 11,
+    fontFamily: "Helvetica",
+    color: "#333",
+    lineHeight: 1.6,
+  },
+  header: {
+    fontSize: 22,
+    textAlign: "center",
+    marginBottom: 20,
+    fontWeight: "bold",
+    color: "#1A237E",
+  },
+  sectionTitle: {
+    fontSize: 14,
+    marginTop: 20,
+    marginBottom: 8,
+    textDecoration: "underline",
+    fontWeight: "bold",
+  },
+  section: {
+    marginBottom: 4,
+  },
+  table: {
+    display: "table",
+    width: "100%",
+    marginTop: 10,
+    borderStyle: "solid",
+    borderWidth: 1,
+    borderColor: "#ccc",
+  },
+  tableRow: {
+    flexDirection: "row",
+  },
+  tableHeader: {
+    backgroundColor: "#f0f0f0",
+    fontWeight: "bold",
+  },
+  tableCol: {
+    borderRight: "1px solid #ccc",
+    borderBottom: "1px solid #ccc",
+    padding: 6,
+    textAlign: "left",
+  },
+  col1: { width: "40%" },
+  col2: { width: "20%" },
+  col3: { width: "20%" },
+  col4: { width: "20%", borderRight: "none" },
+  summary: {
+    marginTop: 20,
+    fontSize: 12,
+  },
+  bold: {
+    fontWeight: "bold",
+    marginTop: 4,
+  },
+  footer: {
+    marginTop: 40,
+    fontSize: 12,
+    textAlign: "center",
+    color: "#666",
+  },
+});
+
+const InvoicePDF = ({ order }) => {
+  const items = order.items || [];
+  const userName =
+    order.userDetails?.name ||
+    order.shippingAddress?.firstName + " " + order.shippingAddress?.lastName;
+  const orderDate =
+    order.userDetails?.date ||
+    new Date(order.createdAt).toLocaleString("en-IN", {
+      dateStyle: "medium",
+      timeStyle: "short",
+    });
+
+  return (
+    <Document>
+      <Page size="A4" style={styles.page}>
+        <Text style={styles.header}>Goyat Trading Co.</Text>
+
+        <Text style={styles.sectionTitle}>Order Summary</Text>
+        <Text style={styles.section}>Order ID: {order._id}</Text>
+        <Text style={styles.section}>Unique ID: {order.orderUniqueId}</Text>
+        <Text style={styles.section}>Customer: {userName}</Text>
+        {order?.userDetails?.upiId && (
+          <Text style={styles.section}>
+            UPI ID: {order?.userDetails?.upiId}
+          </Text>
+        )}
+        <Text style={styles.section}>Order Date: {orderDate}</Text>
+        <Text style={styles.section}>
+          Payment Status: {order.paymentStatus}
+        </Text>
+        <Text style={styles.section}>
+          Payment Method: {order.paymentMethod}
+        </Text>
+        <Text style={styles.section}>Order Status: {order.orderStatus}</Text>
+
+        <Text style={styles.sectionTitle}>Items</Text>
+        <View style={styles.table}>
+          {/* Table Header */}
+          <View style={[styles.tableRow, styles.tableHeader]}>
+            <Text style={[styles.tableCol, styles.col1]}>Product</Text>
+            <Text style={[styles.tableCol, styles.col2]}>Qty</Text>
+            <Text style={[styles.tableCol, styles.col3]}>Price (Rs.)</Text>
+            <Text style={[styles.tableCol, styles.col4]}>Total (Rs.)</Text>
+          </View>
+
+          {/* Table Rows */}
+          {items.map((item, idx) => {
+            const product = item.productId || {};
+            const price = product.finalPrice || 0;
+            const total = price * item.quantity;
+            return (
+              <View style={styles.tableRow} key={idx}>
+                <Text style={[styles.tableCol, styles.col1]}>
+                  {product.title}
+                </Text>
+                <Text style={[styles.tableCol, styles.col2]}>
+                  {item.quantity}
+                </Text>
+                <Text style={[styles.tableCol, styles.col3]}>
+                  Rs.{price.toFixed(2)}
+                </Text>
+                <Text style={[styles.tableCol, styles.col4]}>
+                  Rs.{total.toFixed(2)}
+                </Text>
+              </View>
+            );
+          })}
+        </View>
+
+        {/* Summary Section */}
+        <View style={styles.summary}>
+          <Text>Shipping Cost: {order.shippingCost === 0 ? "Free" : `Rs. ${order.shippingCost}`}</Text>
+          <Text style={styles.bold}>Total Amount: Rs.{order.totalAmount}</Text>
+        </View>
+
+        {/* Footer */}
+        <Text style={styles.footer}>
+          Thank you for shopping with Goyat Trading Co.
+        </Text>
+      </Page>
+    </Document>
+  );
+};
 export default function UserProfile() {
   const [activeTab, setActiveTab] = useState("orders");
   const [formData, setFormData] = useState({
@@ -49,7 +207,7 @@ export default function UserProfile() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [openIndex, setOpenIndex] = useState(null);
-  const { user,loading } = useSelector((state) => state.login);
+  const { user, loading } = useSelector((state) => state.login);
   const toggleIndex = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
@@ -129,8 +287,8 @@ export default function UserProfile() {
   const handleLogoutFun = () => {
     handleLogout();
     dispatch(resetState());
-  dispatch(resetWishlistState());
-  dispatch(resetCartState())
+    dispatch(resetWishlistState());
+    dispatch(resetCartState());
     router.push("/");
   };
   // Handle order selection
@@ -158,12 +316,12 @@ export default function UserProfile() {
   }, []);
   console.log("user", user);
   console.log("loading", loading);
-  
-if(loading || !user){
-  console.log("loading", loading);
-  
-  return <div>Loading...</div>
-}
+
+  if (loading || !user) {
+    console.log("loading", loading);
+
+    return <div>Loading...</div>;
+  }
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
@@ -530,10 +688,20 @@ if(loading || !user){
                         Placed on {selectedOrder.date}
                       </p> */}
                     </div>
-                    <button className="flex items-center px-4 py-2 green text-white rounded-lg hover:bg-purple-700">
+
+                    <PDFDownloadLink
+                      document={<InvoicePDF order={selectedOrder} />}
+                      fileName={`Invoice_ ${selectedOrder?.orderUniqueId}.pdf`}
+                    >
+                       <button className="flex items-center px-4 py-2 green text-white rounded-lg hover:bg-purple-700">
                       <Download className="h-4 w-4 mr-2" />
                       Invoice
                     </button>
+                    </PDFDownloadLink>
+                    {/* <button className="flex items-center px-4 py-2 green text-white rounded-lg hover:bg-purple-700">
+                      <Download className="h-4 w-4 mr-2" />
+                      Invoice
+                    </button> */}
                   </div>
                 </div>
 
@@ -689,7 +857,7 @@ if(loading || !user){
                     <div className="flex justify-between">
                       <span className="text-gray-600">Subtotal</span>
                       <span>
-                        {selectedOrder?.totalAmount +
+                        {selectedOrder?.totalAmount -
                           selectedOrder?.shippingCost}
                       </span>
                     </div>
@@ -704,7 +872,7 @@ if(loading || !user){
                     <div className="flex justify-between pt-2 border-t border-gray-200">
                       <span className="font-semibold">Total</span>
                       <span className="font-semibold">
-                       Rs. {Math.round(selectedOrder?.totalAmount)}
+                        Rs. {Math.round(selectedOrder?.totalAmount)}
                       </span>
                     </div>
                   </div>
