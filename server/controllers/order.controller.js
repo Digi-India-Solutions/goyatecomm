@@ -209,9 +209,9 @@ const verifyPayment = async (req, res) => {
 
 const getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find({ user: req?.user?._id }).populate(
-      "items.productId"
-    );
+    const orders = await Order.find({ user: req?.user?._id })
+      .sort({ createdAt: -1 })
+      .populate("items.productId");
     return res.status(200).json({ orders });
   } catch (error) {
     console.log("get all orders error", error);
@@ -652,7 +652,7 @@ const uploadOrders = async (req, res) => {
         items: productDetails,
         totalAmount: actualAmount,
         serviceCharges: serviceCharges || 0,
-        shippingCost:  0,
+        shippingCost: 0,
         userDetails: { date: order.date, name, upiId },
         orderUniqueId: orderId,
         paymentStatus: "Paid",
